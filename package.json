@@ -1,0 +1,12 @@
+{
+  "name": "swarm-app",
+  "version": "1.0.0",
+  "description": "Application minimale pour TP Swarm CI/CD GitHub",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
