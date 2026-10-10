@@ -1,36 +1,33 @@
-stages:
-  - test
-  - build
-  - package
+name: Tests Python
 
-variables:
-  VERSION: "V1"
-  DOCKER_HOST: "tcp://docker:2375"
-  DOCKER_TLS_CERTDIR: ""
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
 
-test:
-  stage: test
-  image: python:3.12-slim
-  script:
-    - python -m py_compile app.py
+permissions:
+  contents: read
 
-build:
-  stage: build
-  image: docker:24-cli
-  services:
-    - name: docker:24-dind
-      alias: docker
-  script:
-    - docker info
-    - docker build -t "$DOCKERHUB_IMAGE:$VERSION" .
+jobs:
+  tests:
+    runs-on: ubuntu-latest
 
-package:
-  stage: package
-  image: docker:24-cli
-  services:
-    - name: docker:24-dind
-      alias: docker
-  script:
-    - echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USER" --password-stdin
-    - docker build -t "$DOCKERHUB_IMAGE:$VERSION" .
-    - docker push "$DOCKERHUB_IMAGE:$VERSION"
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installer les dependances
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+          pip install pytest
+
+      - name: Executer les tests
+        run: python -m pytest
