@@ -1,14 +1,21 @@
+
 from flask import Flask
+import os
 
 app = Flask(__name__)
 
-@app.route("/")
-def accueil():
-    return "Bonjour ! Bienvenue dans mon application Python 🚀"
+VERSION = os.getenv("APP_VERSION", "v1")
 
-@app.route("/about")
-def about():
-    return "Ceci est la page À propos."
+@app.route("/")
+def home():
+    return {
+        "message": "Bonjour depuis Docker Swarm !",
+        "version": VERSION
+    }
+
+@app.route("/health")
+def health():
+    return {"status": "ok"}, 200
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
