@@ -1,18 +1,12 @@
-
-version: "3.8"
+version: '3.8'
 
 services:
   web:
-    image: ${IMAGE_NAME}
-    environment:
-      APP_VERSION: ${APP_VERSION}
+    image: ${IMAGE_NAME}:${IMAGE_TAG}
     ports:
-      - target: 5000
-        published: 8080
-        protocol: tcp
-        mode: ingress
-    networks:
-      - webnet
+      - "80:3000"
+    environment:
+      - APP_VERSION=${IMAGE_TAG}
     deploy:
       replicas: 3
       update_config:
@@ -20,12 +14,9 @@ services:
         delay: 10s
         order: start-first
         failure_action: rollback
-      rollback_config:
-        parallelism: 1
-        delay: 5s
       restart_policy:
         condition: on-failure
 
 networks:
-  webnet:
+  default:
     driver: overlay
