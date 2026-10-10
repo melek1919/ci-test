@@ -31,6 +31,9 @@ jobs:
           username: ${{ secrets.SWARM_USER }}
           key: ${{ secrets.SWARM_SSH_KEY }}
           script: |
+            echo "${{secrets.SWARM_HOST}}"
+            echo "${{secrets.SWARM_USER}}"
+            echo "${{secrets.GITHUB_TOKEN}}"
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             IMAGE_NAME=ghcr.io/${{ github.repository }} IMAGE_TAG=latest docker stack deploy --with-registry-auth --resolve-image=always -c - mystack << 'EOF'
             version: '3.8'
