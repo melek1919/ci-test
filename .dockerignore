@@ -1,7 +1,5 @@
+node_modules
 .git
-.github
-.venv
-venv
-__pycache__
-*.pyc
-.env
+.gitignore
+Dockerfile
+README.md
