@@ -29,7 +29,7 @@ jobs:
         with:
           host: ${{ secrets.SWARM_HOST }}
           username: ${{ secrets.SWARM_USER }}
-          key: ${{ secrets.SWARM_SSH_KEY }}
+          key: github-action-ssh 
           script: |
             echo "${{secrets.SWARM_HOST}}"
             echo "${{secrets.SWARM_USER}}"
