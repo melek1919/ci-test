@@ -1,0 +1,36 @@
+stages:
+  - test
+  - build
+  - package
+
+variables:
+  VERSION: "V1"
+  DOCKER_HOST: "tcp://docker:2375"
+  DOCKER_TLS_CERTDIR: ""
+
+test:
+  stage: test
+  image: python:3.12-slim
+  script:
+    - python -m py_compile app.py
+
+build:
+  stage: build
+  image: docker:24-cli
+  services:
+    - name: docker:24-dind
+      alias: docker
+  script:
+    - docker info
+    - docker build -t "$DOCKERHUB_IMAGE:$VERSION" .
+
+package:
+  stage: package
+  image: docker:24-cli
+  services:
+    - name: docker:24-dind
+      alias: docker
+  script:
+    - echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USER" --password-stdin
+    - docker build -t "$DOCKERHUB_IMAGE:$VERSION" .
+    - docker push "$DOCKERHUB_IMAGE:$VERSION"
