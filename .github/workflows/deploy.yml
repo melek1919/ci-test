@@ -1,7 +1,7 @@
 name: Deploy to Swarm
 
 on:
-  workflow_dispatch: # Déclenchement uniquement MANUEL via un bouton dans GitHub
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -29,11 +29,9 @@ jobs:
         with:
           host: ${{ secrets.SWARM_HOST }}
           username: ${{ secrets.SWARM_USER }}
-          key: github-action-ssh 
+          key: ${{ secrets.SWARM_SSH_KEY }} # Corrected secret reference
+          port: 42139 # Remplacez par le port généré par votre tunnel
           script: |
-            echo "${{secrets.SWARM_HOST}}"
-            echo "${{secrets.SWARM_USER}}"
-            echo "${{secrets.GITHUB_TOKEN}}"
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             IMAGE_NAME=ghcr.io/${{ github.repository }} IMAGE_TAG=latest docker stack deploy --with-registry-auth --resolve-image=always -c - mystack << 'EOF'
             version: '3.8'
