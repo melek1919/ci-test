@@ -30,7 +30,7 @@ jobs:
           host: ${{ secrets.SWARM_HOST }}
           username: ${{ secrets.SWARM_USER }}
           key: ${{ secrets.SWARM_SSH_KEY }} # Corrected secret reference
-          port: 42139 # Remplacez par le port généré par votre tunnel
+          port: 45273
           script: |
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             IMAGE_NAME=ghcr.io/${{ github.repository }} IMAGE_TAG=latest docker stack deploy --with-registry-auth --resolve-image=always -c - mystack << 'EOF'
